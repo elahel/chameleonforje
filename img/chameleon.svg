@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="fire" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFC66D"/>
+      <stop offset="50%" stop-color="#FFA22B"/>
+      <stop offset="100%" stop-color="#FF5B00"/>
+    </linearGradient>
+    <filter id="soft-glow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <style>
+      .stroke { stroke:url(#fire); stroke-width:28; stroke-linecap:round; stroke-linejoin:round; fill:none; filter:url(#soft-glow); }
+      .fill   { fill:url(#fire); }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#000000"/>
+  <g transform="translate(64,64)">
+    <!-- Outer coil / silhouette -->
+    <path class="stroke" d="
+      M 520 860
+      C 400 900, 260 860, 220 760
+      C 180 660, 230 560, 330 520
+      C 420 485, 520 540, 500 630
+      C 485 700, 410 720, 360 690" />
+
+    <!-- Back arc wrapping around the die -->
+    <path class="stroke" d="
+      M 210 720
+      C 140 520, 240 360, 420 300
+      C 600 240, 790 300, 860 430
+      C 905 515, 902 610, 860 700" />
+
+    <!-- Head / snout -->
+    <path class="stroke" d="
+      M 760 390
+      C 860 380, 920 350, 940 320
+      C 958 292, 920 260, 840 258
+      C 760 256, 680 292, 640 330" />
+
+    <!-- Eye -->
+    <circle class="stroke" cx="780" cy="320" r="36"/>
+    <circle class="fill"   cx="788" cy="320" r="10"/>
+
+    <!-- Front leg reaching the die -->
+    <path class="stroke" d="
+      M 640 470
+      C 610 520, 570 560, 540 590" />
+    <path class="stroke" d="
+      M 540 590
+      C 525 605, 518 610, 500 620" />
+
+    <!-- Hind leg -->
+    <path class="stroke" d="
+      M 430 520
+      C 400 560, 370 600, 350 630" />
+
+    <!-- Tail spiral -->
+    <path class="stroke" d="
+      M 520 860
+      C 610 830, 660 760, 640 700
+      C 622 650, 560 640, 520 670
+      C 490 690, 490 730, 515 745" />
+
+    <!-- D20 outline (stylized) -->
+    <g>
+      <polygon class="stroke" points="360,840 580,840 700,640 540,480 340,560 280,720"/>
+      <!-- internal edges -->
+      <path class="stroke" d="M 580 840 L 540 480 L 360 840 Z"/>
+      <path class="stroke" d="M 340 560 L 700 640 L 280 720 Z"/>
+      <path class="stroke" d="M 340 560 L 540 480 L 700 640"/>
+    </g>
+
+    <!-- Flames on the right -->
+    <path class="stroke" d="
+      M 820 720
+      C 845 690, 850 650, 830 620
+      C 860 640, 880 690, 860 730" />
+    <path class="stroke" d="
+      M 860 730
+      C 888 700, 900 660, 888 620
+      C 920 646, 930 696, 900 736" />
+
+    <!-- Number 20 -->
+    <g transform="translate(470,710)">
+      <path class="stroke" d="M 0 0 C 40 -36, 80 -60, 80 -90 C 80 -118, 58 -130, 36 -130 C 10 -130, -10 -110, -10 -88 C -10 -70, 2 -56, 20 -50"/>
+      <path class="stroke" d="M 120 -120 C 90 -120, 70 -95, 70 -60 C 70 -25, 90 0, 120 0 C 150 0, 170 -25, 170 -60 C 170 -95, 150 -120, 120 -120 Z"/>
+    </g>
+  </g>
+</svg>
