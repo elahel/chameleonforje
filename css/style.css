@@ -47,7 +47,12 @@ h2 {
 }
 
 .tab-pane {
+    display: none; /* oculta todas por padrão */
     padding: 2rem 1rem;
+}
+
+.tab-pane.active {
+    display: block; /* mostra apenas a aba ativa */
 }
 
 /* ============================= */
@@ -58,7 +63,7 @@ h2 {
 }
 
 /* ============================= */
-/* Cards de Valores - Aba Sobre Premium */
+/* Cards de Valores - Aba Sobre */
 .tab-pane#sobre .value-card {
     background: linear-gradient(135deg, rgba(43, 50, 90, 0.7), rgba(111, 66, 193, 0.5));
     border-radius: 0.75rem;
@@ -67,6 +72,15 @@ h2 {
     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
     color: #eaeaea;
     font-family: 'Orbitron', sans-serif;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 320px;
+    max-height: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
 }
 
 .tab-pane#sobre .value-card:hover {
@@ -83,7 +97,9 @@ h2 {
 }
 
 .tab-pane#sobre .value-card p {
-    font-family: 'Orbitron', sans-serif;
+    flex-grow: 1;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
 }
 
 @media (max-width: 576px) {
@@ -125,22 +141,22 @@ h2 {
     font-weight: 700;
     line-height: 1.2;
     margin: 0;
-    display: inline; /* inline para não quebrar linha */
-    vertical-align: baseline;
+    display: block;
+    text-align: center;
 }
 
 /* ============================= */
 /* "By Elahel" cursivo dourado */
 .by-elahel {
-    display: inline-block;
+    display: block;
     font-family: 'Dancing Script', cursive;
     font-size: 1.6rem;
     color: #d4af37;
     text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
     animation: glow 3s ease-in-out infinite alternate;
-    margin-left: 0.3rem;
+    margin-top: -0.5rem;
+    text-align: center;
     white-space: nowrap;
-    vertical-align: baseline; /* alinha na mesma linha do título */
 }
 
 /* ============================= */
@@ -150,11 +166,10 @@ h2 {
 }
 
 .logo-title-container {
-    display: inline-flex;      /* mantém tudo na linha */
-    align-items: baseline;     /* alinhamento perfeito do L */
-    gap: 0.5rem;               /* espaço entre título e by */
-    white-space: nowrap;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .logo-title-container img {
@@ -164,13 +179,8 @@ h2 {
 }
 
 @media (max-width: 991.98px) {
-    .logo-title-container {
-        width: 100%;
-        justify-content: flex-start;
-    }
-    .navbar-toggler {
-        margin-bottom: 0.2rem;
-        align-self: flex-end;
+    .logo-title-container img {
+        height: 100px;
     }
 }
 
@@ -198,6 +208,10 @@ h2 {
     color: #eaeaea;
     font-family: 'Orbitron', sans-serif;
     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .hero-card:hover {
@@ -214,6 +228,7 @@ h2 {
 
 .hero-card p {
     margin-bottom: 0.8rem;
+    flex-grow: 1;
 }
 
 .hero-card .btn-preco {
