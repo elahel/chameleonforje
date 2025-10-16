@@ -417,3 +417,22 @@ h2 {
     75% { filter: hue-rotate(270deg); }
     100% { filter: hue-rotate(360deg); }
 }
+/* Força altura fixa do carrossel e centraliza conteúdo, mantendo o Bootstrap */
+#carouselEstudioSupremo .carousel-inner {
+    height: 250px; /* altura do hero-card ou do vídeo */
+}
+
+/* Mantém cada item com altura total, mas deixa o Bootstrap controlar a visibilidade */
+#carouselEstudioSupremo .carousel-item {
+    height: 100%;
+}
+
+/* Ajusta vídeo e imagens para não cortar, mantendo proporção */
+#carouselEstudioSupremo img,
+#carouselEstudioSupremo video {
+    max-height: 100%;
+    width: auto;
+    display: block;
+    margin: 0 auto; /* centraliza horizontalmente */
+    object-fit: contain;
+}
