@@ -1,49 +1,39 @@
 /* =============================================
-   Loader Camaleão + SPA Animações & Highlight
+   Loader + SPA Animações & Highlight
    ============================================= */
 
-const loaderStart = Date.now(); // Marca o início do carregamento
-
-window.addEventListener("load", () => {
+function hideLoader() {
   const loader = document.getElementById("loader");
-  if (!loader) return;
+  if (!loader || loader.style.display === "none") return;
 
-  const elapsed = Date.now() - loaderStart;
-  const minDuration = 10000; // 10 segundos
-  const remaining = minDuration - elapsed;
+  loader.classList.add("fade-out");
+  setTimeout(() => loader.style.display = "none", 800);
+}
 
-  setTimeout(() => {
-    loader.classList.add("fade-out");
-    setTimeout(() => loader.style.display = "none", 800);
-  }, remaining > 0 ? remaining : 0);
+// Loader máximo 5s
+window.addEventListener("load", () => {
+  hideLoader();
+  initHeroCarousels();
 });
 
-// Plano B: garante que o loader nunca fique preso além de 10s
-setTimeout(() => {
-  const loader = document.getElementById("loader");
-  if (loader && loader.style.display !== "none") {
-    loader.classList.add("fade-out");
-    setTimeout(() => loader.style.display = "none", 800);
-  }
-}, 10000);
+// Garantia extra: se algo travar, remove loader após 6s
+setTimeout(hideLoader, 6000);
 
 /* ---------------------------------------------
-   Intersection Observer para fade e slide das seções
+   Intersection Observer para fade e slide
 --------------------------------------------- */
 const sections = document.querySelectorAll(".section");
 
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("visible");
-    }
+    if (entry.isIntersecting) entry.target.classList.add("visible");
   });
 }, { threshold: 0.2 });
 
 sections.forEach(sec => observer.observe(sec));
 
 /* ---------------------------------------------
-   Highlight automático no menu ao rolar a página
+   Highlight automático no menu
 --------------------------------------------- */
 const navLinks = document.querySelectorAll(".nav-link");
 
@@ -60,7 +50,7 @@ const spyObserver = new IntersectionObserver(entries => {
 sections.forEach(sec => spyObserver.observe(sec));
 
 /* ---------------------------------------------
-   Controle SPA das abas (Bootstrap)
+   Controle SPA das abas
 --------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
   const tabButtons = document.querySelectorAll('#myTab button');
@@ -72,60 +62,106 @@ document.addEventListener('DOMContentLoaded', () => {
       tabButtons.forEach(b => b.classList.remove('active'));
       tabContents.forEach(tc => tc.classList.remove('show', 'active'));
       btn.classList.add('active');
+
       const target = document.querySelector(btn.getAttribute('data-bs-target'));
       if (target) target.classList.add('show', 'active');
 
-      adjustCardHeights(); // Ajusta altura dos cards ao mudar de aba
+      adjustCardHeights();
+      initHeroCarousels();
     });
   });
 
-  adjustCardHeights(); // Ajusta inicialmente
+  adjustCardHeights();
+  initHeroCarousels();
 });
 
 /* ---------------------------------------------
-   Função para uniformizar altura dos cards
+   Ajusta altura dos cards
 --------------------------------------------- */
 function adjustCardHeights() {
-  const heroCardContainers = document.querySelectorAll('.tab-pane.active .hero-card');
-  const valueCardContainers = document.querySelectorAll('.tab-pane.active .value-card');
+  const heroCards = document.querySelectorAll('.tab-pane.active .hero-card');
+  const valueCards = document.querySelectorAll('.tab-pane.active .value-card');
 
-  heroCardContainers.forEach(card => card.style.height = 'auto');
-  valueCardContainers.forEach(card => card.style.height = 'auto');
+  heroCards.forEach(c => c.style.height = 'auto');
+  valueCards.forEach(c => c.style.height = 'auto');
 
-  let maxHeroHeight = 0;
-  heroCardContainers.forEach(card => {
-    if(card.offsetHeight > maxHeroHeight) maxHeroHeight = card.offsetHeight;
-  });
-  heroCardContainers.forEach(card => card.style.height = maxHeroHeight + 'px');
+  let maxHero = Math.max(...Array.from(heroCards).map(c => c.offsetHeight));
+  let maxValue = Math.max(...Array.from(valueCards).map(c => c.offsetHeight));
 
-  let maxValueHeight = 0;
-  valueCardContainers.forEach(card => {
-    if(card.offsetHeight > maxValueHeight) maxValueHeight = card.offsetHeight;
-  });
-  valueCardContainers.forEach(card => card.style.height = maxValueHeight + 'px');
+  heroCards.forEach(c => c.style.height = maxHero + 'px');
+  valueCards.forEach(c => c.style.height = maxValue + 'px');
 }
 
 /* ---------------------------------------------
-   Footer links para abrir a aba de contato
+   Inicializa mini carrosséis nos hero-cards
 --------------------------------------------- */
+function initHeroCarousels() {
+  const carousels = document.querySelectorAll('.hero-card .carousel');
+  carousels.forEach(carousel => {
+    if (!carousel.dataset.bsInitialized) {
+      new bootstrap.Carousel(carousel, { interval: 3000 });
+      carousel.dataset.bsInitialized = true;
+    }
+  });
+}
+
+// Footer links para abrir abas correspondentes
 document.addEventListener('DOMContentLoaded', () => {
-  const contatoTabBtn = document.querySelector('#contato-tab');
+  const tabButtons = document.querySelectorAll('#myTab button');
 
-  if (contatoTabBtn) {
-    const emailLink = document.querySelector('.footer-section a[href^="mailto:"]');
-    const whatsappLink = document.querySelector('.footer-section a[href*="wa.me"]');
+  // Links do footer que levam a abas
+  document.querySelectorAll('.footer-section a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href').substring(1); // remove #
+      const targetBtn = Array.from(tabButtons).find(btn => btn.getAttribute('data-bs-target') === `#${targetId}`);
+      if (targetBtn) {
+        // Força a aba via Bootstrap
+        const tab = new bootstrap.Tab(targetBtn);
+        tab.show();
 
-    [emailLink, whatsappLink].forEach(link => {
-      if (link) {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          contatoTabBtn.click();
-          const contatoSection = document.querySelector('#contato');
-          if (contatoSection) {
-            contatoSection.scrollIntoView({ behavior: 'smooth' });
-          }
-        });
+        // Atualiza classes de active manualmente para seu JS de SPA
+        tabButtons.forEach(b => b.classList.remove('active'));
+        targetBtn.classList.add('active');
+
+        const allTabContents = document.querySelectorAll('.tab-pane');
+        allTabContents.forEach(tc => tc.classList.remove('show', 'active'));
+        const targetContent = document.querySelector(`#${targetId}`);
+        if (targetContent) targetContent.classList.add('show', 'active');
+
+        // Scroll suave
+        targetContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Ajusta cards e carrosséis
+        adjustCardHeights();
+        initHeroCarousels();
       }
+    });
+  });
+
+  // Botões dos cards levando à aba de contato
+  const contatoBtn = document.querySelector('#contato-tab');
+  if (contatoBtn) {
+    document.querySelectorAll('a.btn-preco[href="#contato"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tab = new bootstrap.Tab(contatoBtn);
+        tab.show();
+
+        // Atualiza classes de active
+        tabButtons.forEach(b => b.classList.remove('active'));
+        contatoBtn.classList.add('active');
+
+        const allTabContents = document.querySelectorAll('.tab-pane');
+        allTabContents.forEach(tc => tc.classList.remove('show', 'active'));
+        const contatoSec = document.querySelector('#contato');
+        if (contatoSec) contatoSec.classList.add('show', 'active');
+
+        contatoSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        adjustCardHeights();
+        initHeroCarousels();
+      });
     });
   }
 });
+
